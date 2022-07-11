@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react'
-import Blogs from './components/Blog'
+import { useState, useEffect, useRef } from 'react'
+import Blogs from './components/Blogs'
 import BlogForm from './components/BlogForm'
 import Loginform from './components/LoginForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState("")
+
+  const blogFormRef = useRef()
 
   const notify = (message, type) => {
     setNotification({ message, type })
@@ -19,8 +22,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    )
   }, [])
 
   useEffect(() => {
@@ -36,14 +39,27 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
   }
 
-return (
+  const toggleVisibility = () => {
+    blogFormRef.current.toggleVisibility()
+  }
+
+  const showWhenLoggedIn = () => (
     <div>
-      <Notification notification={notification}/>
-      {user===null && <Loginform setUser={setUser} notify={notify} />}
-      {user!==null && <h2>{user.name} logged in</h2>}
-      {user!==null && <button onClick={handleLogout}>logout</button>}
-      {user!==null && <BlogForm user={user} notify={notify}/>}
-      {user!==null && <Blogs blogs={blogs} />}
+      <h2>{user.name} logged in</h2>
+      <button onClick={handleLogout}>logout</button>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm user={user} notify={notify} toggleVisibility={toggleVisibility} 
+        blogs={blogs} setBlogs={setBlogs}/>
+      </Togglable>
+      <Blogs blogs={blogs} setBlogs={setBlogs} user={user} notify={notify}/>
+    </div>
+  )
+
+  return (
+    <div>
+      <Notification notification={notification} />
+      {user === null && <Loginform setUser={setUser} notify={notify} />}
+      {user && showWhenLoggedIn()}
     </div>
   )
 }
