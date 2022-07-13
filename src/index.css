@@ -8,11 +8,11 @@
   margin-bottom: 10px;
 }
 .error {
-color: rgb(239, 43, 43);
-background: rgb(244, 244, 244);
-font-size: 20px;
-border-style: solid;
-border-radius: 5px;
-padding: 10px;
-margin-bottom: 10px;
+  color: rgb(239, 43, 43);
+  background: rgb(244, 244, 244);
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }

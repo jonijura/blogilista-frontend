@@ -1,66 +1,72 @@
-import {useState} from 'react'
-import blogService from '../services/blogs'
+import { useDispatch } from "react-redux/es/exports";
+import { setNotification } from "../reducers/notificationReducer";
+import { createBlog } from "../reducers/blogReducer";
+import { useState } from "react";
 
-const BlogForm = ({user, notify, toggleVisibility, blogs, setBlogs, mockFun}) => {
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
+const BlogForm = ({ user, toggleVisibility, mockFun }) => {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
-    const handleSubmit = (event) => {
-        if(mockFun){
-            mockFun(title, author, url)
-            return
-        }
-        event.preventDefault()
-        blogService.create({
-            title: title,
-            author: author,
-            url: url
-        }, user).then(blog => {
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-            notify(`a new blog ${blog.title} by ${blog.author} added`, 'msg')
-            setBlogs(blogs.concat(blog))
-        }).catch(error => {
-            notify(error.response.data.error, 'error')
-        })
-        toggleVisibility()
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (mockFun) {
+      mockFun(title, author, url);
+      return;
     }
+    dispatch(createBlog({ title, author, url, user })).then((blog) => {
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+      console.log("blog created", blog);
+      dispatch(
+        setNotification(
+          {
+            msg: `a new blog ${blog.title} by ${blog.author} added`,
+            type: "msg",
+          },
+          3
+        )
+      );
+    });
+    toggleVisibility();
+  };
 
-    return (
+  return (
+    <div>
+      <h2>new blog</h2>
+      <form onSubmit={handleSubmit}>
         <div>
-            <h2>new blog</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    title
-                    <input
-                        value={title}
-                        onChange={({ target }) => setTitle(target.value)}
-                        id='title'
-                    />
-                </div>
-                <div>
-                    author
-                    <input
-                        value={author} 
-                        onChange={({ target }) => setAuthor(target.value)}
-                        id='author'
-                    />
-                </div>
-                <div>
-                    url
-                    <input
-                        value={url} 
-                        onChange={({ target }) => setUrl(target.value)}
-                        id='url'
-                    />
-                </div>
-                <button type="submit"
-                id='create-button'>create</button>
-            </form>
+          title
+          <input
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+            id="title"
+          />
         </div>
-    )
-}
+        <div>
+          author
+          <input
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+            id="author"
+          />
+        </div>
+        <div>
+          url
+          <input
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+            id="url"
+          />
+        </div>
+        <button type="submit" id="create-button">
+          create
+        </button>
+      </form>
+    </div>
+  );
+};
 
-export default BlogForm
+export default BlogForm;
