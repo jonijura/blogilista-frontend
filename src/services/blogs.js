@@ -33,6 +33,14 @@ const update = async (params) => {
   return request.data;
 };
 
+const addComment = async (blog, comment) => {
+  const request = await axios.put(`${baseUrl}/${blog.id}/comment`, {
+    comment: comment,
+  });
+  console.log("request.data", request.data);
+  return request.data;
+};
+
 const remove = async (id, token) => {
   const request = await axios.delete(`${baseUrl}/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -40,4 +48,4 @@ const remove = async (id, token) => {
   return request.data;
 };
 
-export default { getAll, create, update, remove };
+export default { getAll, create, update, remove, addComment };

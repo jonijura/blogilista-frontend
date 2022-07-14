@@ -11,7 +11,8 @@ import { setUser } from "./reducers/loggedUserReducer";
 import { getUsers } from "./reducers/usersReducer";
 import Users from "./components/Users";
 import User from "./components/User";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navigation from "./components/Navigation";
 
 const App = () => {
   const user = useSelector((state) => state.loggedUser);
@@ -20,7 +21,6 @@ const App = () => {
   useEffect(() => {
     dispatch(getBlogs());
     dispatch(getUsers());
-    console.log("here");
   });
 
   useEffect(() => {
@@ -39,21 +39,9 @@ const App = () => {
   const toggleVisibility = () => {
     blogFormRef.current.toggleVisibility();
   };
-  const padding = {
-    padding: 5,
-  };
   const showWhenLoggedIn = () => (
     <Router>
-      <div>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </div>
+      <Navigation handleLogout={handleLogout} user={user} />
       <h2>blog app</h2>
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm user={user} toggleVisibility={toggleVisibility} />
@@ -68,7 +56,7 @@ const App = () => {
   );
 
   return (
-    <div>
+    <div className="container">
       <Notification />
       {user === null && <Loginform />}
       {user && showWhenLoggedIn()}

@@ -23,7 +23,7 @@ const BlogForm = ({ user, toggleVisibility, mockFun }) => {
         setNotification(
           {
             msg: `a new blog ${blog.title} by ${blog.author} added`,
-            type: "msg",
+            type: "success",
           },
           3
         )

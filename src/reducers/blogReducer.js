@@ -42,4 +42,10 @@ export const updateBlog = (blog) => async (dispatch) => {
   return updatedBlog;
 };
 
+export const addComment = (blog, comment) => async (dispatch) => {
+  const updatedBlog = await blogServices.addComment(blog, comment);
+  dispatch(blogSlice.actions.updateBlog(updatedBlog));
+  return updatedBlog;
+};
+
 export default blogSlice.reducer;

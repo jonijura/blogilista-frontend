@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux/es/exports";
 import { setNotification } from "../reducers/notificationReducer";
 import { useState } from "react";
 import { login } from "../reducers/loggedUserReducer";
+import { Form, Button } from "react-bootstrap";
 
 const LoginForm = ({ setUser }) => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const LoginForm = ({ setUser }) => {
       .catch((error) => {
         dispatch(
           setNotification(
-            { msg: "wrong username or password", type: "error" },
+            { msg: "wrong username or password", type: "warning" },
             3
           )
         );
@@ -30,27 +31,25 @@ const LoginForm = ({ setUser }) => {
   return (
     <div>
       <h2>login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control
             value={username}
             onChange={({ target }) => setUsername(target.value)}
             id="username"
           />
-        </div>
-        <div>
-          password
-          <input
+          <Form.Label>password:</Form.Label>
+          <Form.Control
             value={password}
             onChange={({ target }) => setPassword(target.value)}
             id="password"
           />
-        </div>
-        <button type="submit" id="login-button">
-          login
-        </button>
-      </form>
+          <Button variant="primary" type="submit" id="login-button">
+            login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   );
 };
