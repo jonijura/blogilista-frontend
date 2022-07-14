@@ -19,7 +19,6 @@ const BlogForm = ({ user, toggleVisibility, mockFun }) => {
       setTitle("");
       setAuthor("");
       setUrl("");
-      console.log("blog created", blog);
       dispatch(
         setNotification(
           {

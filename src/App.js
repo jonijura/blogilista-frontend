@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Loginform from "./components/LoginForm";
 import Notification from "./components/Notification";
@@ -7,6 +8,10 @@ import Togglable from "./components/Togglable";
 import { getBlogs } from "./reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./reducers/loggedUserReducer";
+import { getUsers } from "./reducers/usersReducer";
+import Users from "./components/Users";
+import User from "./components/User";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 const App = () => {
   const user = useSelector((state) => state.loggedUser);
@@ -14,6 +19,8 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getBlogs());
+    dispatch(getUsers());
+    console.log("here");
   });
 
   useEffect(() => {
@@ -32,16 +39,32 @@ const App = () => {
   const toggleVisibility = () => {
     blogFormRef.current.toggleVisibility();
   };
-
+  const padding = {
+    padding: 5,
+  };
   const showWhenLoggedIn = () => (
-    <div>
-      <h2>{user.name} logged in</h2>
-      <button onClick={handleLogout}>logout</button>
+    <Router>
+      <div>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        {user.name} logged in
+        <button onClick={handleLogout}>logout</button>
+      </div>
+      <h2>blog app</h2>
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm user={user} toggleVisibility={toggleVisibility} />
       </Togglable>
-      <Blogs user={user} />
-    </div>
+      <Routes>
+        <Route path="/users" element={<Users />} />
+        <Route path="/" element={<Blogs user={user} />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route path="/blogs/:id" element={<Blog />} />
+      </Routes>
+    </Router>
   );
 
   return (

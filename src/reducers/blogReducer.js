@@ -18,6 +18,7 @@ const blogSlice = createSlice({
   },
 });
 
+//should also update users!
 export const createBlog = (blog) => async (dispatch) => {
   const newBlog = await blogServices.create(blog);
   dispatch(blogSlice.actions.addBlog(newBlog));
@@ -29,11 +30,12 @@ export const getBlogs = () => async (dispatch) => {
   dispatch(blogSlice.actions.setBlogs(blogs));
 };
 
+//should also update users!
 export const deleteBlog = (blog, user) => async (dispatch) => {
   await blogServices.remove(blog.id, user.token);
   dispatch(blogSlice.actions.deleteBlog(blog.id));
 };
-//blogServices uses modify!
+
 export const updateBlog = (blog) => async (dispatch) => {
   const updatedBlog = await blogServices.update(blog);
   dispatch(blogSlice.actions.updateBlog(updatedBlog));
