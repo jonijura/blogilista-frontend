@@ -4,6 +4,9 @@ import Table from "react-bootstrap/Table";
 
 const Users = () => {
   const users = useSelector((state) => state.users);
+  if (!users) {
+    return null;
+  }
   return (
     <div>
       <h2>users</h2>
